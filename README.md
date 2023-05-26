@@ -5,8 +5,8 @@
 Use the package manager yarn to install.
 
 ```bash
-    yarn
-    yarn dev
+yarn
+yarn dev
 ```
 
 ## Features
