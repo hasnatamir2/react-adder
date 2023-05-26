@@ -1,52 +1,56 @@
 import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { IFormProps } from "./IForm";
 
-const Form: FC = () => {
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    getValues,
-  } = useForm()
+const Form: FC<IFormProps> = ({
+    rows,
+    total,
+    handleAddRow,
+    handlePositiveChange,
+    handleInputChange,
+    handleRowDelete,
+    handleRowDisable,
+}) => {
     return (
-        <div>
-            <div className='wrapper'>
-                <div>
-                    <button>Add row</button>
-                </div>
-                <ul>
-                    <li>
-                        <select>
-                            <option selected>+</option>
-                            <option>-</option>
+        <div className='wrapper'>
+            <button onClick={handleAddRow}>Add row</button>
+            <ul className='form-list'>
+                {rows.map((row) => (
+                    <li key={row.id} className='form-row'>
+                        <select
+                            onChange={(e) =>
+                                handlePositiveChange(
+                                    Number(e.target.value),
+                                    row.id
+                                )
+                            }
+                        >
+                            <option value={1}>+</option>
+                            <option value={0}>-</option>
                         </select>
-                        <input type='text' value='100' />
-                        <button>Delete</button>
-                        <button>Disable</button>
+                        <input
+                            disabled={row.disabled}
+                            value={row.value}
+                            type='number'
+                            min={0}
+                            onChange={(e) =>
+                                handleInputChange(
+                                    Number(e.target.value),
+                                    row.id
+                                )
+                            }
+                        />
+                        <button onClick={() => handleRowDelete(row.id)}>
+                            Delete
+                        </button>
+                        <button onClick={() => handleRowDisable(row.id)}>
+                            {row.disabled ? "Enable" : "Disable"}
+                        </button>
                     </li>
-                    <li>
-                        <select>
-                            <option selected>+</option>
-                            <option>-</option>
-                        </select>
-                        <input type='text' value='30' />
-                        <button>Delete</button>
-                        <button>Disable</button>
-                    </li>
-                    <li>
-                        <select>
-                            <option>+</option>
-                            <option selected>-</option>
-                        </select>
-                        <input type='text' value='7' />
-                        <button>Delete</button>
-                        <button>Disable</button>
-                    </li>
-                </ul>
-                <div>Result: 123</div>
-            </div>
+                ))}
+            </ul>
+            <span>
+                Result: <span className='form-total'>{total}</span>
+            </span>
         </div>
     );
 };
